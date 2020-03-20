@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+//Redirects
+Route::redirect('/admin', '/admin/dashboard', 301);
+
+
 
 //This is the router for the frontend
 Route::get('/', 'MainController@home')->name('home');
@@ -22,4 +26,9 @@ Route::get('/foods', 'MainController@foods')->name('foods');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::group(['prefix' => 'admin', 'namespace'=>'admin', 'middleware'=>'auth'], function () {
+    Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+    Route::resource('foods', 'FoodsController');
+    Route::resource('lifestyle', 'LifestyleController');
+    Route::resource('about', 'AboutController');
+});
